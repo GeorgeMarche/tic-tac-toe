@@ -1,0 +1,59 @@
+import random as r
+
+def DisplayBoard(board):
+    for i in range(3):
+        print("+---+---+---+")
+        print("| "+str(board[3*i][1])+" | "+str(board[3*i+1][1])+" | "+str(board[3*i+2][1])+" |")
+    print("+---+---+---+")
+
+def EnterMove(board):
+    while True:    
+        pos = int(input("Enter the position you'd like to place your O: "))
+        if board[pos - 1] not in ['X','O']:
+            del board[pos - 1]
+            board.insert(pos - 1, (pos//3 + 1, "O"))
+            return
+
+def MakeListOfFreeFields(board):
+    for i in range(1, 10):
+        board.append((i//3 + 1, i))
+
+def VictoryFor(board, sign):
+    for i in range(3):
+        if board[3*i][1] == board[3*i+1][1] == board[3*i+2][1] == sign:
+            return True
+        elif board[i][1] == board[i+3][1] == board[i+6][1] == sign:
+            return True
+    if board[0][1] == board[4][1] == board[8][1] == sign:
+        return True
+    if board[2][1] == board[4][1] == board[6][1] == sign:
+        return True
+    else:
+        return False
+
+def DrawMove(board):
+    if board[4][1] != 'X':
+        del board[4]
+        board.insert(4, (5, 'X'))
+        return
+    else:
+        while True:
+            rand = r.randint(0, 8)
+            if board[rand][1] not in ['X','O']:
+                del board[rand]
+                board.insert(rand, (rand+1, 'X'))
+                return
+
+board = []
+MakeListOfFreeFields(board)
+DrawMove(board)
+DisplayBoard(board)
+while not VictoryFor(board, 'X') and not VictoryFor(board, 'O'):
+    EnterMove(board)
+    DisplayBoard(board)
+    DrawMove(board)
+    DisplayBoard(board)
+if VictoryFor(board, 'O'):
+    print("YOU'RE THE WINNER!")
+elif VictoryFor(board, 'X'):
+    print("YOU LOST!")
